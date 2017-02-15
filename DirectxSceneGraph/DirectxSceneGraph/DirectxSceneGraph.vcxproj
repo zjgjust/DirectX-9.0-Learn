@@ -18,6 +18,25 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="camera.cpp" />
+    <ClCompile Include="d3dfont.cpp" />
+    <ClCompile Include="d3dutil.cpp" />
+    <ClCompile Include="d3dUtility.cpp" />
+    <ClCompile Include="dxutil.cpp" />
+    <ClCompile Include="fps.cpp" />
+    <ClCompile Include="terrain.cpp" />
+    <ClCompile Include="terrainDriver.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="camera.h" />
+    <ClInclude Include="d3dfont.h" />
+    <ClInclude Include="d3dutil.h" />
+    <ClInclude Include="d3dUtility.h" />
+    <ClInclude Include="dxutil.h" />
+    <ClInclude Include="fps.h" />
+    <ClInclude Include="terrain.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{AE8FFDF3-FB0E-48CD-9A06-8E1B63C20665}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
@@ -153,13 +172,6 @@
       <AdditionalDependencies>d3d9.lib;d3dx9.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClInclude Include="d3dUtility.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="d3dInit.cpp" />
-    <ClCompile Include="d3dUtility.cpp" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
