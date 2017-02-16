@@ -8,6 +8,12 @@
     <Filter Include="Code">
       <UniqueIdentifier>{78cd3a04-856c-4d0d-8525-e1b10cb463d5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Cube">
+      <UniqueIdentifier>{922d2f09-9ae6-43db-81ab-e5f8a9834976}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SnowMan">
+      <UniqueIdentifier>{fc522542-322d-492c-995d-f94ab445d722}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="camera.cpp">
@@ -31,7 +37,10 @@
     <ClCompile Include="terrain.cpp">
       <Filter>Code</Filter>
     </ClCompile>
-    <ClCompile Include="terrainDriver.cpp">
+    <ClCompile Include="Cube\cube.cpp">
+      <Filter>Cube</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
       <Filter>Code</Filter>
     </ClCompile>
   </ItemGroup>
@@ -56,6 +65,12 @@
     </ClInclude>
     <ClInclude Include="terrain.h">
       <Filter>Code</Filter>
+    </ClInclude>
+    <ClInclude Include="Cube\cube.h">
+      <Filter>Cube</Filter>
+    </ClInclude>
+    <ClInclude Include="Cube\vertex.h">
+      <Filter>Cube</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

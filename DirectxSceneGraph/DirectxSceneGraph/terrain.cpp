@@ -194,7 +194,7 @@ bool Terrain::loadTexture(std::string fileName)
 		fileName.c_str(),
 		&_tex);
 
-	if(FAILED(hr))
+	if (FAILED(hr))
 		return false;
 
 	return true;
@@ -464,7 +464,9 @@ bool Terrain::draw(D3DXMATRIX* world, bool drawTris)
 		_device->SetTransform(D3DTS_WORLD, world);
 
 		_device->SetStreamSource(0, _vb, 0, sizeof(TerrainVertex));
+		
 		_device->SetFVF(TerrainVertex::FVF);
+		
 		_device->SetIndices(_ib);
 		
 		_device->SetTexture(0, _tex);

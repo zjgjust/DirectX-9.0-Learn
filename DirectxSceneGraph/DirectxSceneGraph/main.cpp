@@ -14,6 +14,8 @@
 #include "terrain.h"
 #include "camera.h"
 #include "fps.h"
+#include "cube.h"
+#include "vertex.h"
 
 //
 // Globals
@@ -24,7 +26,15 @@ IDirect3DDevice9* Device = 0;
 const int Width  = 1920;
 const int Height = 1280;
 
+//cube
+Cube*              Box = 0;
+IDirect3DTexture9* BoxTexture = nullptr;
+float			   SelfRotateAngle = 0;
+float			   GlobalRotateAngle = 0;
+
+//terrain
 Terrain* TheTerrain = 0;
+
 Camera   TheCamera(Camera::LANDOBJECT);
 
 //FPSCounter* FPS = 0;
@@ -32,6 +42,22 @@ Camera   TheCamera(Camera::LANDOBJECT);
 //
 // Framework Functions
 //
+
+bool LoadTexture(std::string fileName,IDirect3DTexture9 **tex)
+{
+	HRESULT hr = 0;
+
+	hr = D3DXCreateTextureFromFile(
+		Device,
+		fileName.c_str(),
+		tex);
+
+	if (FAILED(hr))
+		return false;
+
+	return true;
+}
+
 bool Setup()
 {
 	//
@@ -39,14 +65,21 @@ bool Setup()
 	//
 
 	D3DXVECTOR3 lightDirection(0.0f, 1.0f, 0.0f);
+	
 	TheTerrain = new Terrain(Device, "coastMountain64.raw", 64, 64, 10, 0.5f);
+	
 	TheTerrain->genTexture(&lightDirection);
 
 	//
-	// Create the font.
+	// Create the cube
 	//
-
-	//FPS = new FPSCounter(Device);
+	Box = new Cube(Device);
+	
+	if (!LoadTexture("Data/crate.jpg", &BoxTexture))
+	{
+		::MessageBox(0, "Cube texture error.", 0, 0);
+		::PostQuitMessage(0);
+	}
 
 	//
 	// Set texture filters.
@@ -55,6 +88,22 @@ bool Setup()
 	Device->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
 	Device->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
 	Device->SetSamplerState(0, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR);
+
+	//
+	// Light
+	//
+	D3DLIGHT9 light;
+	::ZeroMemory(&light, sizeof(light));
+	light.Type = D3DLIGHT_DIRECTIONAL;
+	light.Ambient = D3DXCOLOR(0.8f, 0.8f, 0.8f, 1.0f);
+	light.Diffuse = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+	light.Specular = D3DXCOLOR(0.2f, 0.2f, 0.2f, 1.0f);
+	light.Direction = D3DXVECTOR3(1.0f, -1.0f, 0.0f);
+	Device->SetLight(0, &light);
+	Device->LightEnable(0, true);
+
+	Device->SetRenderState(D3DRS_NORMALIZENORMALS, true);
+	//Device->SetRenderState(D3DRS_SPECULARENABLE, false);
 
 	//
 	// Set projection matrix.
@@ -109,6 +158,7 @@ bool Display(float timeDelta)
 		
 		if( ::GetAsyncKeyState(VK_RIGHT) & 0x8000f )
 			TheCamera.yaw(1.0f * timeDelta);
+
 		D3DXVECTOR3 pos;
 		TheCamera.getPosition(&pos);
 		float height = TheTerrain->getHeight( pos.x, pos.z ) * 0.2; // ½µµÍ¸ß¶È
@@ -122,16 +172,40 @@ bool Display(float timeDelta)
 		//
 		// Draw the scene:
 		//
-
 		Device->Clear(0, 0, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0xff000000, 1.0f, 0);
 		Device->BeginScene();
 
+		//
+		// Draw the terrain
+		//
 		D3DXMATRIX I;
 		D3DXMatrixIdentity(&I);
 
 		if( TheTerrain )
 			TheTerrain->draw(&I, false);
+		//
+		//Draw Box
+		//
+		SelfRotateAngle += 0.00005 * D3DX_PI;
+		if (SelfRotateAngle >= 2 * D3DX_PI)
+			SelfRotateAngle = 0.0;
+		D3DXMATRIX SelfRotateMatrix;
+		D3DXMatrixRotationY(&SelfRotateMatrix, SelfRotateAngle);
+		GlobalRotateAngle += 0.00005 * D3DX_PI;
+		if (GlobalRotateAngle >= 2 * D3DX_PI)
+			GlobalRotateAngle = 0.0;
+		D3DXMATRIX GlobalRotateMatrix;
+		D3DXMatrixRotationY(&GlobalRotateMatrix, GlobalRotateAngle);
 
+		D3DXMATRIX ScallMatrix;
+		D3DXMatrixScaling(&ScallMatrix, 5, 5, 5);
+		D3DXMATRIX TransMatrix;
+		D3DXMatrixTranslation(&TransMatrix, 0.0, 30, 80.0);
+		D3DXMATRIX InputMatrix = SelfRotateMatrix * ScallMatrix * TransMatrix * GlobalRotateMatrix;
+
+		if (Box != nullptr)
+			Box->draw(&InputMatrix, &d3d::WHITE_MTRL, BoxTexture);
+		
 		//if( FPS )
 		//	FPS->render(0xffffffff, timeDelta);
 
