@@ -312,7 +312,7 @@ bool d3d::DrawBasicScene(IDirect3DDevice9* device, float scale)
 
 		D3DXCreateTextureFromFile(
 			device,
-			"desert.bmp",
+			"Data/Terrain/desert.bmp",
 			&tex);
 	}
 	else

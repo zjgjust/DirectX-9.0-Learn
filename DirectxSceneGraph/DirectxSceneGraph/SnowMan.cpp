@@ -99,6 +99,7 @@ void SnowMan::Draw(const D3DXMATRIX _world)
 		_device->SetTransform(D3DTS_WORLD, &matrix);
 		_objects[i]->DrawSubset(0);
 	}
+	_device->SetTexture(0, 0);
 }
 
 

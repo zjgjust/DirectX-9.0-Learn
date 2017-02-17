@@ -15,8 +15,8 @@
 #include "camera.h"
 #include "fps.h"
 #include "cube.h"
-#include "vertex.h"
 #include "SnowMan.h"
+#include "SkyBox.h"
 
 //
 // Globals
@@ -24,13 +24,18 @@
 
 IDirect3DDevice9* Device = 0; 
 
-const int Width  = 1920;
-const int Height = 1280;
+const int Width  = 800;
+const int Height = 600;
+
+//
+// sky box
+//
+CSkyBox *		  SkyBox = nullptr;
 
 //
 //cube
 //
-Cube*              Box = 0;
+Cube*              Box = nullptr;
 IDirect3DTexture9* BoxTexture = nullptr;
 float			   SelfRotateAngle = 0;
 float			   GlobalRotateAngle = 0;
@@ -38,7 +43,7 @@ float			   GlobalRotateAngle = 0;
 //
 //terrain
 //
-Terrain* TheTerrain = 0;
+Terrain* TheTerrain = nullptr;
 
 //
 // snow man
@@ -77,9 +82,18 @@ bool Setup()
 
 	D3DXVECTOR3 lightDirection(0.0f, 1.0f, 0.0f);
 	
-	TheTerrain = new Terrain(Device, "coastMountain64.raw", 64, 64, 10, 0.5f);
+	TheTerrain = new Terrain(Device, "Data/Terrain/coastMountain64.raw", 64, 64, 10, 0.5f);
 	
 	TheTerrain->genTexture(&lightDirection);
+
+	//
+	// sky box
+	//
+	SkyBox = new CSkyBox(Device);
+	if (!SkyBox->InitSkyBox(60))
+	{
+		::MessageBox(NULL, _T("Initialize SkyBox failed!"), 0, 0);
+	}
 
 	//
 	// Create the cube
@@ -195,12 +209,25 @@ bool Display(float timeDelta)
 		Device->BeginScene();
 
 		//
+		// Draw the skybox
+		//
+		D3DXVECTOR3 cameraPosition;
+		TheCamera.getPosition(&cameraPosition);
+		D3DXMATRIX skyBoxTrasMatrix;
+		D3DXMatrixTranslation(&skyBoxTrasMatrix, cameraPosition.x, cameraPosition.y, cameraPosition.z);
+		if (SkyBox != nullptr)
+		{
+			Device->SetTransform(D3DTS_WORLD, &skyBoxTrasMatrix);
+			SkyBox->Render();
+		}
+
+		//
 		// Draw the terrain
 		//
 		D3DXMATRIX I;
 		D3DXMatrixIdentity(&I);
 
-		if (TheTerrain)
+		if (TheTerrain != nullptr)
 			TheTerrain->draw(&I, false);
 
 		//

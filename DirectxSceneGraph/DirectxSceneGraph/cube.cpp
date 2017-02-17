@@ -11,7 +11,6 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
 #include "cube.h"
-#include "vertex.h"
 
 Cube::Cube(IDirect3DDevice9* device)
 {
@@ -24,7 +23,7 @@ Cube::Cube(IDirect3DDevice9* device)
 	_device->CreateVertexBuffer(
 		24 * sizeof(Vertex), 
 		D3DUSAGE_WRITEONLY,
-		FVF_VERTEX,
+		Vertex::FVF,
 		D3DPOOL_MANAGED,
 		&_vb,
 		0);
@@ -129,7 +128,7 @@ bool Cube::draw(D3DXMATRIX* world, const D3DMATERIAL9* mtrl, IDirect3DTexture9* 
 
 	_device->SetStreamSource(0, _vb, 0, sizeof(Vertex));
 	_device->SetIndices(_ib);
-	_device->SetFVF(FVF_VERTEX);
+	_device->SetFVF(Vertex::FVF);
 	_device->DrawIndexedPrimitive(
 		D3DPT_TRIANGLELIST, 
 		0,                  

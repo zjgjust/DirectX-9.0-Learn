@@ -8,9 +8,6 @@
     <Filter Include="Code">
       <UniqueIdentifier>{78cd3a04-856c-4d0d-8525-e1b10cb463d5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Cube">
-      <UniqueIdentifier>{922d2f09-9ae6-43db-81ab-e5f8a9834976}</UniqueIdentifier>
-    </Filter>
     <Filter Include="SnowMan">
       <UniqueIdentifier>{fc522542-322d-492c-995d-f94ab445d722}</UniqueIdentifier>
     </Filter>
@@ -26,6 +23,12 @@
     <Filter Include="Fps">
       <UniqueIdentifier>{20314bef-6a90-445c-89df-d9af0f2a26e4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="SkyBox">
+      <UniqueIdentifier>{2ab4511d-b2ba-48a4-b91e-090cf3185aec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Cube">
+      <UniqueIdentifier>{77a68f1a-77b9-4f68-80f9-bf2199d08278}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="d3dutil.cpp">
@@ -36,9 +39,6 @@
     </ClCompile>
     <ClCompile Include="dxutil.cpp">
       <Filter>Code</Filter>
-    </ClCompile>
-    <ClCompile Include="Cube\cube.cpp">
-      <Filter>Cube</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>Code</Filter>
@@ -58,6 +58,12 @@
     <ClCompile Include="SnowMan.cpp">
       <Filter>SnowMan</Filter>
     </ClCompile>
+    <ClCompile Include="SkyBox.cpp">
+      <Filter>SkyBox</Filter>
+    </ClCompile>
+    <ClCompile Include="cube.cpp">
+      <Filter>Cube</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="d3dutil.h">
@@ -68,12 +74,6 @@
     </ClInclude>
     <ClInclude Include="dxutil.h">
       <Filter>Code</Filter>
-    </ClInclude>
-    <ClInclude Include="Cube\cube.h">
-      <Filter>Cube</Filter>
-    </ClInclude>
-    <ClInclude Include="Cube\vertex.h">
-      <Filter>Cube</Filter>
     </ClInclude>
     <ClInclude Include="camera.h">
       <Filter>Camera</Filter>
@@ -89,6 +89,12 @@
     </ClInclude>
     <ClInclude Include="SnowMan.h">
       <Filter>SnowMan</Filter>
+    </ClInclude>
+    <ClInclude Include="SkyBox.h">
+      <Filter>SkyBox</Filter>
+    </ClInclude>
+    <ClInclude Include="cube.h">
+      <Filter>Cube</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

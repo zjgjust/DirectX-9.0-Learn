@@ -20,25 +20,26 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="camera.cpp" />
-    <ClCompile Include="Cube\cube.cpp" />
+    <ClCompile Include="cube.cpp" />
     <ClCompile Include="d3dfont.cpp" />
     <ClCompile Include="d3dutil.cpp" />
     <ClCompile Include="d3dUtility.cpp" />
     <ClCompile Include="dxutil.cpp" />
     <ClCompile Include="fps.cpp" />
+    <ClCompile Include="SkyBox.cpp" />
     <ClCompile Include="SnowMan.cpp" />
     <ClCompile Include="terrain.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="camera.h" />
-    <ClInclude Include="Cube\cube.h" />
-    <ClInclude Include="Cube\vertex.h" />
+    <ClInclude Include="cube.h" />
     <ClInclude Include="d3dfont.h" />
     <ClInclude Include="d3dutil.h" />
     <ClInclude Include="d3dUtility.h" />
     <ClInclude Include="dxutil.h" />
     <ClInclude Include="fps.h" />
+    <ClInclude Include="SkyBox.h" />
     <ClInclude Include="SnowMan.h" />
     <ClInclude Include="terrain.h" />
   </ItemGroup>
@@ -166,7 +167,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>../../Include;./cube;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
