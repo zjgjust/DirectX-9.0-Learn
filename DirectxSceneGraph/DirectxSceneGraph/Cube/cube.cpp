@@ -138,5 +138,7 @@ bool Cube::draw(D3DXMATRIX* world, const D3DMATERIAL9* mtrl, IDirect3DTexture9* 
 		0,
 		12);  
 
+	// avoid texture dirty
+	_device->SetTexture(0, 0);
 	return true;
 }

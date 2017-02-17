@@ -464,9 +464,9 @@ bool Terrain::draw(D3DXMATRIX* world, bool drawTris)
 		_device->SetTransform(D3DTS_WORLD, world);
 
 		_device->SetStreamSource(0, _vb, 0, sizeof(TerrainVertex));
-		
+
 		_device->SetFVF(TerrainVertex::FVF);
-		
+
 		_device->SetIndices(_ib);
 		
 		_device->SetTexture(0, _tex);
@@ -497,6 +497,9 @@ bool Terrain::draw(D3DXMATRIX* world, bool drawTris)
 
 			_device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 		}
+
+		// avoid texture dirty
+		_device->SetTexture(0, 0);
 
 		if(FAILED(hr))
 			return false;

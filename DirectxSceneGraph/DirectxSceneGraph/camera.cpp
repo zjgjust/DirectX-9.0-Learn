@@ -16,7 +16,7 @@ Camera::Camera()
 {
 	_cameraType = AIRCRAFT;
 
-	_pos   = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	_pos   = D3DXVECTOR3(0.0f, 0.0f, -30.0f);
 	_right = D3DXVECTOR3(1.0f, 0.0f, 0.0f);
 	_up    = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 	_look  = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
@@ -26,7 +26,7 @@ Camera::Camera(CameraType cameraType)
 {
 	_cameraType = cameraType;
 
-	_pos   = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	_pos   = D3DXVECTOR3(0.0f, 0.0f, -30.0f);
 	_right = D3DXVECTOR3(1.0f, 0.0f, 0.0f);
 	_up    = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 	_look  = D3DXVECTOR3(0.0f, 0.0f, 1.0f);

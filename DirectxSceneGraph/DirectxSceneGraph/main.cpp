@@ -16,6 +16,7 @@
 #include "fps.h"
 #include "cube.h"
 #include "vertex.h"
+#include "SnowMan.h"
 
 //
 // Globals
@@ -26,14 +27,24 @@ IDirect3DDevice9* Device = 0;
 const int Width  = 1920;
 const int Height = 1280;
 
+//
 //cube
+//
 Cube*              Box = 0;
 IDirect3DTexture9* BoxTexture = nullptr;
 float			   SelfRotateAngle = 0;
 float			   GlobalRotateAngle = 0;
 
+//
 //terrain
+//
 Terrain* TheTerrain = 0;
+
+//
+// snow man
+//
+SnowMan* SnowManStatic = nullptr;
+SnowMan* SnowManDynamic = nullptr;
 
 Camera   TheCamera(Camera::LANDOBJECT);
 
@@ -82,6 +93,12 @@ bool Setup()
 	}
 
 	//
+	// Create the snow mans
+	//
+	SnowManStatic = new SnowMan(Device);
+	SnowManDynamic = new SnowMan(Device);
+
+	//
 	// Set texture filters.
 	//
 
@@ -92,18 +109,19 @@ bool Setup()
 	//
 	// Light
 	//
-	D3DLIGHT9 light;
-	::ZeroMemory(&light, sizeof(light));
-	light.Type = D3DLIGHT_DIRECTIONAL;
-	light.Ambient = D3DXCOLOR(0.8f, 0.8f, 0.8f, 1.0f);
-	light.Diffuse = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
-	light.Specular = D3DXCOLOR(0.2f, 0.2f, 0.2f, 1.0f);
-	light.Direction = D3DXVECTOR3(1.0f, -1.0f, 0.0f);
-	Device->SetLight(0, &light);
-	Device->LightEnable(0, true);
+ 	D3DLIGHT9 light;
+ 	::ZeroMemory(&light, sizeof(light));
+ 	light.Type = D3DLIGHT_DIRECTIONAL;
+ 	light.Ambient = D3DXCOLOR(0.8f, 0.8f, 0.8f, 1.0f);
+ 	light.Diffuse = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+ 	light.Specular = D3DXCOLOR(0.2f, 0.2f, 0.2f, 1.0f);
+ 	light.Direction = D3DXVECTOR3(5.0f, -20.0f, 0.0f);
+ 	Device->SetLight(0, &light);
+ 	Device->LightEnable(0, true);
+
 
 	Device->SetRenderState(D3DRS_NORMALIZENORMALS, true);
-	//Device->SetRenderState(D3DRS_SPECULARENABLE, false);
+	Device->SetRenderState(D3DRS_SPECULARENABLE, false);
 
 	//
 	// Set projection matrix.
@@ -124,6 +142,7 @@ bool Setup()
 void Cleanup()
 {
 	d3d::Delete<Terrain*>(TheTerrain);
+	
 	//d3d::Delete<FPSCounter*>(FPS);
 }
 
@@ -181,8 +200,17 @@ bool Display(float timeDelta)
 		D3DXMATRIX I;
 		D3DXMatrixIdentity(&I);
 
-		if( TheTerrain )
+		if (TheTerrain)
 			TheTerrain->draw(&I, false);
+
+		//
+		// Draw Snow Man
+		//
+		D3DXMATRIX snowMatrix;
+		D3DXMatrixTranslation(&snowMatrix, 0.0, 7.0, 0.0);
+		if (SnowManStatic != nullptr)
+			SnowManStatic->Draw(snowMatrix);
+
 		//
 		//Draw Box
 		//
@@ -200,11 +228,19 @@ bool Display(float timeDelta)
 		D3DXMATRIX ScallMatrix;
 		D3DXMatrixScaling(&ScallMatrix, 5, 5, 5);
 		D3DXMATRIX TransMatrix;
-		D3DXMatrixTranslation(&TransMatrix, 0.0, 30, 80.0);
+		D3DXMatrixTranslation(&TransMatrix, 0.0, 20.0, 50.0);
 		D3DXMATRIX InputMatrix = SelfRotateMatrix * ScallMatrix * TransMatrix * GlobalRotateMatrix;
 
 		if (Box != nullptr)
 			Box->draw(&InputMatrix, &d3d::WHITE_MTRL, BoxTexture);
+		
+		//Snow Man
+		D3DXMATRIX STransMatrix;
+		D3DXMatrixTranslation(&STransMatrix, 0.0, 25.0, 50.0);
+		InputMatrix = SelfRotateMatrix * STransMatrix * GlobalRotateMatrix;
+		if (SnowManDynamic != nullptr)
+			SnowManDynamic->Draw(InputMatrix);
+		
 		
 		//if( FPS )
 		//	FPS->render(0xffffffff, timeDelta);
@@ -263,3 +299,4 @@ int WINAPI WinMain(HINSTANCE hinstance,
 
 	return 0;
 }
+

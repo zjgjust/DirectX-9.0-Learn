@@ -14,14 +14,20 @@
     <Filter Include="SnowMan">
       <UniqueIdentifier>{fc522542-322d-492c-995d-f94ab445d722}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Camera">
+      <UniqueIdentifier>{5b766418-935f-4de9-934b-4a1fe0dd01e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Terrain">
+      <UniqueIdentifier>{b2e14641-c011-49b2-a963-1360c9136ede}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Font">
+      <UniqueIdentifier>{4c3f1ee6-790d-495d-bfb2-082a90ad22d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fps">
+      <UniqueIdentifier>{20314bef-6a90-445c-89df-d9af0f2a26e4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="camera.cpp">
-      <Filter>Code</Filter>
-    </ClCompile>
-    <ClCompile Include="d3dfont.cpp">
-      <Filter>Code</Filter>
-    </ClCompile>
     <ClCompile Include="d3dutil.cpp">
       <Filter>Code</Filter>
     </ClCompile>
@@ -31,26 +37,29 @@
     <ClCompile Include="dxutil.cpp">
       <Filter>Code</Filter>
     </ClCompile>
-    <ClCompile Include="fps.cpp">
-      <Filter>Code</Filter>
-    </ClCompile>
-    <ClCompile Include="terrain.cpp">
-      <Filter>Code</Filter>
-    </ClCompile>
     <ClCompile Include="Cube\cube.cpp">
       <Filter>Cube</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>Code</Filter>
     </ClCompile>
+    <ClCompile Include="camera.cpp">
+      <Filter>Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="terrain.cpp">
+      <Filter>Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="d3dfont.cpp">
+      <Filter>Font</Filter>
+    </ClCompile>
+    <ClCompile Include="fps.cpp">
+      <Filter>Fps</Filter>
+    </ClCompile>
+    <ClCompile Include="SnowMan.cpp">
+      <Filter>SnowMan</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="camera.h">
-      <Filter>Code</Filter>
-    </ClInclude>
-    <ClInclude Include="d3dfont.h">
-      <Filter>Code</Filter>
-    </ClInclude>
     <ClInclude Include="d3dutil.h">
       <Filter>Code</Filter>
     </ClInclude>
@@ -60,17 +69,26 @@
     <ClInclude Include="dxutil.h">
       <Filter>Code</Filter>
     </ClInclude>
-    <ClInclude Include="fps.h">
-      <Filter>Code</Filter>
-    </ClInclude>
-    <ClInclude Include="terrain.h">
-      <Filter>Code</Filter>
-    </ClInclude>
     <ClInclude Include="Cube\cube.h">
       <Filter>Cube</Filter>
     </ClInclude>
     <ClInclude Include="Cube\vertex.h">
       <Filter>Cube</Filter>
+    </ClInclude>
+    <ClInclude Include="camera.h">
+      <Filter>Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="terrain.h">
+      <Filter>Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="d3dfont.h">
+      <Filter>Font</Filter>
+    </ClInclude>
+    <ClInclude Include="fps.h">
+      <Filter>Fps</Filter>
+    </ClInclude>
+    <ClInclude Include="SnowMan.h">
+      <Filter>SnowMan</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

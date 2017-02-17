@@ -26,6 +26,7 @@
     <ClCompile Include="d3dUtility.cpp" />
     <ClCompile Include="dxutil.cpp" />
     <ClCompile Include="fps.cpp" />
+    <ClCompile Include="SnowMan.cpp" />
     <ClCompile Include="terrain.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
@@ -38,6 +39,7 @@
     <ClInclude Include="d3dUtility.h" />
     <ClInclude Include="dxutil.h" />
     <ClInclude Include="fps.h" />
+    <ClInclude Include="SnowMan.h" />
     <ClInclude Include="terrain.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
