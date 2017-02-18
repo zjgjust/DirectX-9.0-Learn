@@ -1,13 +1,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////
-// 
-// File: terrainDriver.cpp
-// 
-// Author: Frank Luna (C) All Rights Reserved
-//
-// System: AMD Athlon 1800+ XP, 512 DDR, Geforce 3, Windows XP, MSVC++ 7.0 
-//
-// Desc: Renders a terrain and allows you to walk around it. 
-//          
+//  Snowman Scene Graph
+//  Author zjg
+//  Date   2017-2-11          
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
 #include "d3dUtility.h"
@@ -17,25 +11,36 @@
 #include "cube.h"
 #include "SnowMan.h"
 #include "SkyBox.h"
+#include "pSystem.h"
 
+#include <cstdlib>
+#include <ctime>
 //
 // Globals
 //
 
 IDirect3DDevice9* Device = 0; 
 
-const int Width  = 800;
-const int Height = 600;
+const int Width  = 1920;
+const int Height = 1080;
+
 //
 // Mouse
 //
 bool IsMouseDown = false;
 POINT LastMousePoint = { 0,0 };
 POINT CurrentMousePoint = { 0,0 };
+
 //
 // sky box
 //
 CSkyBox *		  SkyBox = nullptr;
+
+//
+// snow
+//
+using namespace psys;
+PSystem *Sno = nullptr;
 
 //
 //cube
@@ -56,7 +61,18 @@ Terrain* TheTerrain = nullptr;
 SnowMan* SnowManStatic = nullptr;
 SnowMan* SnowManDynamic = nullptr;
 
+//
+// camera
+//
 Camera   TheCamera(Camera::LANDOBJECT);
+typedef struct Boundary
+{
+	float minX;
+	float maxX;
+	float minZ;
+	float maxZ;
+} Boundary;
+Boundary CameraBoundary;
 
 //FPSCounter* FPS = 0;
 
@@ -110,19 +126,30 @@ bool LoadTexture(std::string fileName,IDirect3DTexture9 **tex)
 
 bool Setup()
 {
+	// seed random number generator
+	srand((unsigned int)time(0));
+
+	//
+	// Create Snow System.
+	//
+	d3d::BoundingBox boundingBox;
+	boundingBox._min = D3DXVECTOR3(-70.0f, 0.0f, -70.0f);
+	boundingBox._max = D3DXVECTOR3(70.0f, 70.0f, 70.0f);
+	Sno = new Snow(&boundingBox, 5000);
+	Sno->init(Device, "Data/Snow/snowflake.dds");
 	//
 	// Create the terrain.
 	//
-
 	D3DXVECTOR3 lightDirection(0.0f, 1.0f, 0.0f);
-	
 	TheTerrain = new Terrain(Device, "Data/Terrain/coastMountain64.raw", 64, 64, 10, 0.5f);
-	
 	TheTerrain->genTexture(&lightDirection);
+	TheTerrain->getBoundarys(CameraBoundary.minX, CameraBoundary.maxX, CameraBoundary.minZ, CameraBoundary.maxZ);
+	TheCamera.setBoundary(CameraBoundary.minX, CameraBoundary.maxX, CameraBoundary.minZ, CameraBoundary.maxZ);
 
 	//
 	// sky box
 	//
+
 	SkyBox = new CSkyBox(Device);
 	if (!SkyBox->InitSkyBox(200))
 	{
@@ -132,8 +159,8 @@ bool Setup()
 	//
 	// Create the cube
 	//
+
 	Box = new Cube(Device);
-	
 	if (!LoadTexture("Data/crate.jpg", &BoxTexture))
 	{
 		::MessageBox(0, "Cube texture error.", 0, 0);
@@ -143,6 +170,7 @@ bool Setup()
 	//
 	// Create the snow mans
 	//
+
 	SnowManStatic = new SnowMan(Device);
 	SnowManDynamic = new SnowMan(Device);
 
@@ -157,6 +185,7 @@ bool Setup()
 	//
 	// Light
 	//
+
  	D3DLIGHT9 light;
  	::ZeroMemory(&light, sizeof(light));
  	light.Type = D3DLIGHT_DIRECTIONAL;
@@ -166,8 +195,6 @@ bool Setup()
  	light.Direction = D3DXVECTOR3(5.0f, -20.0f, 0.0f);
  	Device->SetLight(0, &light);
  	Device->LightEnable(0, true);
-
-
 	Device->SetRenderState(D3DRS_NORMALIZENORMALS, true);
 	Device->SetRenderState(D3DRS_SPECULARENABLE, false);
 
@@ -181,7 +208,7 @@ bool Setup()
 			D3DX_PI * 0.25f, // 45 - degree
 			(float)Width / (float)Height,
 			1.0f,
-			1000.0f);
+			10000.0f);
 	Device->SetTransform(D3DTS_PROJECTION, &proj);
 
 	return true;
@@ -227,13 +254,9 @@ bool Display(float timeDelta)
 			TheCamera.yaw(1.0f * timeDelta);
 
 		if (::GetAsyncKeyState(VK_LBUTTON))
-		{
 			IsMouseDown = true;
-		}
 		else
-		{
 			IsMouseDown = false;
-		}
 
 		MouseDragFunc();
 
@@ -247,6 +270,9 @@ bool Display(float timeDelta)
 		TheCamera.getViewMatrix(&V);
 		Device->SetTransform(D3DTS_VIEW, &V);
 
+		//更新雪花数据
+		Sno->update(timeDelta);
+		
 		//
 		// Draw the scene:
 		//
@@ -286,12 +312,12 @@ bool Display(float timeDelta)
 		//
 		//Draw Box
 		//
-		SelfRotateAngle += 0.00005 * D3DX_PI;
+		SelfRotateAngle += 0.001 * D3DX_PI;
 		if (SelfRotateAngle >= 2 * D3DX_PI)
 			SelfRotateAngle = 0.0;
 		D3DXMATRIX SelfRotateMatrix;
 		D3DXMatrixRotationY(&SelfRotateMatrix, SelfRotateAngle);
-		GlobalRotateAngle += 0.00005 * D3DX_PI;
+		GlobalRotateAngle += 0.001 * D3DX_PI;
 		if (GlobalRotateAngle >= 2 * D3DX_PI)
 			GlobalRotateAngle = 0.0;
 		D3DXMATRIX GlobalRotateMatrix;
@@ -313,6 +339,10 @@ bool Display(float timeDelta)
 		if (SnowManDynamic != nullptr)
 			SnowManDynamic->Draw(InputMatrix);
 		
+		
+		// order important, render snow last.
+		Device->SetTransform(D3DTS_WORLD, &I);
+		Sno->render();
 		
 		//if( FPS )
 		//	FPS->render(0xffffffff, timeDelta);
@@ -371,4 +401,3 @@ int WINAPI WinMain(HINSTANCE hinstance,
 
 	return 0;
 }
-

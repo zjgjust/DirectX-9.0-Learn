@@ -40,11 +40,24 @@ public:
 	void getRight(D3DXVECTOR3* right);
 	void getUp(D3DXVECTOR3* up);
 	void getLook(D3DXVECTOR3* look);
+
+	void setBoundary(float x_min, float x_max, float z_min, float z_max)
+	{
+		_minX = x_min;
+		_maxX = x_max;
+		_minZ = z_min;
+		_maxZ = z_max;
+	}
 private:
 	CameraType  _cameraType;
 	D3DXVECTOR3 _right;
 	D3DXVECTOR3 _up;
 	D3DXVECTOR3 _look;
 	D3DXVECTOR3 _pos;
+
+	float _minX;
+	float _maxX;
+	float _minZ;
+	float _maxZ;
 };
 #endif // __cameraH__

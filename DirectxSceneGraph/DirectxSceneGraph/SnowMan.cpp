@@ -92,13 +92,49 @@ void SnowMan::CleanUp()
 
 void SnowMan::Draw(const D3DXMATRIX _world)
 {
-	for (int i = 0; i < 5; i++)
-	{
-		_device->SetMaterial(&_materials[i]);
-		D3DXMATRIX matrix = _worldTranslations[i] * _world;
-		_device->SetTransform(D3DTS_WORLD, &matrix);
-		_objects[i]->DrawSubset(0);
-	}
+// 	for (int i = 0; i < 5; i++)
+// 	{
+// 		_device->SetMaterial(&_materials[i]);
+// 		D3DXMATRIX matrix = _worldTranslations[i] * _world;
+// 		_device->SetTransform(D3DTS_WORLD, &matrix);
+// 		_objects[i]->DrawSubset(0);
+// 	}
+
+	//body
+	_device->SetMaterial(&_materials[0]);
+	D3DXMATRIX matrix = _worldTranslations[0] * _world;
+	_device->SetTransform(D3DTS_WORLD, &matrix);
+	_objects[0]->DrawSubset(0);
+
+	// head
+	_device->SetMaterial(&_materials[1]);
+	matrix = _worldTranslations[1] * _world;
+	_device->SetTransform(D3DTS_WORLD, &matrix);
+	_objects[1]->DrawSubset(0);
+
+	// Depth bias
+	DWORD lastNum = 0.0;
+	_device->GetRenderState(D3DRS_DEPTHBIAS, &lastNum);
+	_device->SetRenderState(D3DRS_DEPTHBIAS, DWORD(-0.2));
+
+	//eye
+	_device->SetMaterial(&_materials[2]);
+	matrix = _worldTranslations[2] * _world;
+	_device->SetTransform(D3DTS_WORLD, &matrix);
+	_objects[2]->DrawSubset(0);
+
+	_device->SetMaterial(&_materials[3]);
+	matrix = _worldTranslations[3] * _world;
+	_device->SetTransform(D3DTS_WORLD, &matrix);
+	_objects[3]->DrawSubset(0);
+
+	//nose
+	_device->SetMaterial(&_materials[4]);
+	matrix = _worldTranslations[4] * _world;
+	_device->SetTransform(D3DTS_WORLD, &matrix);
+	_objects[4]->DrawSubset(0);
+
+	_device->SetRenderState(D3DRS_DEPTHBIAS, lastNum);
 	_device->SetTexture(0, 0);
 }
 

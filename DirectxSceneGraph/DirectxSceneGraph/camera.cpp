@@ -65,11 +65,28 @@ void Camera::getLook(D3DXVECTOR3* look)
 void Camera::walk(float units)
 {
 	// move only on xz plane for land object
-	if( _cameraType == LANDOBJECT )
+	if (_cameraType == LANDOBJECT)
+	{
 		_pos += D3DXVECTOR3(_look.x, 0.0f, _look.z) * units;
+	}
+		
 
-	if( _cameraType == AIRCRAFT )
+	if (_cameraType == AIRCRAFT)
+	{
 		_pos += _look * units;
+	}
+		
+	if (_pos.x < _minX)
+		_pos.x = _minX;
+
+	if (_pos.x > _maxX)
+		_pos.x = _maxX;
+
+	if (_pos.z < _minZ)
+		_pos.z = _minZ;
+
+	if (_pos.z > _maxZ)
+		_pos.z = _maxZ;
 }
 
 void Camera::strafe(float units)
@@ -80,6 +97,18 @@ void Camera::strafe(float units)
 
 	if( _cameraType == AIRCRAFT )
 		_pos += _right * units;
+
+	if (_pos.x < _minX)
+		_pos.x = _minX;
+
+	if (_pos.x > _maxX)
+		_pos.x = _maxX;
+
+	if (_pos.z < _minZ)
+		_pos.z = _minZ;
+
+	if (_pos.z > _maxZ)
+		_pos.z = _maxZ;
 }
 
 void Camera::fly(float units)

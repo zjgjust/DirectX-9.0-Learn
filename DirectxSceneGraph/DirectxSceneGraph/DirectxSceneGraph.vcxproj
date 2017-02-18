@@ -26,6 +26,7 @@
     <ClCompile Include="d3dUtility.cpp" />
     <ClCompile Include="dxutil.cpp" />
     <ClCompile Include="fps.cpp" />
+    <ClCompile Include="pSystem.cpp" />
     <ClCompile Include="SkyBox.cpp" />
     <ClCompile Include="SnowMan.cpp" />
     <ClCompile Include="terrain.cpp" />
@@ -39,6 +40,7 @@
     <ClInclude Include="d3dUtility.h" />
     <ClInclude Include="dxutil.h" />
     <ClInclude Include="fps.h" />
+    <ClInclude Include="pSystem.h" />
     <ClInclude Include="SkyBox.h" />
     <ClInclude Include="SnowMan.h" />
     <ClInclude Include="terrain.h" />

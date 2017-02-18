@@ -38,7 +38,7 @@ public:
 	bool  loadTexture(std::string fileName);
 	bool  genTexture(D3DXVECTOR3* directionToLight);
 	bool  draw(D3DXMATRIX* world, bool drawTris);
-
+	void  getBoundarys(float &x_min, float &x_max, float &z_min, float &z_max);
 private:
 	IDirect3DDevice9*       _device;
 	IDirect3DTexture9*      _tex;
@@ -79,6 +79,11 @@ private:
 
 		static const DWORD FVF;
 	};
+
+	float _boundaryMinX;
+	float _boundaryMaxX;
+	float _boundaryMinZ;
+	float _boundaryMaxZ;
 };
 
 #endif // __terrainH__

@@ -34,6 +34,11 @@ Terrain::Terrain(IDirect3DDevice9* device,
 	_width = _numCellsPerRow * _cellSpacing;
 	_depth = _numCellsPerCol * _cellSpacing;
 
+	_boundaryMinX = -_width / 2 * 0.8;
+	_boundaryMaxX = _width / 2 * 0.8;
+	_boundaryMinZ = -_depth / 2 * 0.8;
+	_boundaryMaxZ = _depth / 2 * 0.8;
+
 	_numVertices  = _numVertsPerRow * _numVertsPerCol;
 	_numTriangles = _numCellsPerRow * _numCellsPerCol * 2;
 
@@ -98,12 +103,12 @@ bool Terrain::computeVertices()
 		return false;
 
 	// coordinates to start generating vertices at
-	int startX = -_width / 2;
-	int startZ =  _depth / 2;
+	int startX = -_width / 2 * 0.9;
+	int startZ =  _depth / 2 * 0.9;
 
 	// coordinates to end generating vertices at
-	int endX =  _width / 2;
-	int endZ = -_depth / 2;
+	int endX =  _width / 2 * 0.9;
+	int endZ = -_depth / 2 * 0.9;
 
 	// compute the increment size of the texture coordinates
 	// from one vertex to the next.
@@ -506,5 +511,13 @@ bool Terrain::draw(D3DXMATRIX* world, bool drawTris)
 	}
 
 	return true;
+}
+
+void Terrain::getBoundarys(float &x_min, float &x_max, float &z_min, float &z_max)
+{
+	x_min = _boundaryMinX;
+	x_max = _boundaryMaxX;
+	z_min = _boundaryMinZ;
+	z_max = _boundaryMaxZ;
 }
 

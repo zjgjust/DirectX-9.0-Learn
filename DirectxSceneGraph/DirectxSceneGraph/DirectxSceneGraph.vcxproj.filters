@@ -29,6 +29,9 @@
     <Filter Include="Cube">
       <UniqueIdentifier>{77a68f1a-77b9-4f68-80f9-bf2199d08278}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ParticleSystem">
+      <UniqueIdentifier>{85169ef9-21ef-4b37-95f3-7c56573a9726}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="d3dutil.cpp">
@@ -64,6 +67,9 @@
     <ClCompile Include="cube.cpp">
       <Filter>Cube</Filter>
     </ClCompile>
+    <ClCompile Include="pSystem.cpp">
+      <Filter>ParticleSystem</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="d3dutil.h">
@@ -95,6 +101,9 @@
     </ClInclude>
     <ClInclude Include="cube.h">
       <Filter>Cube</Filter>
+    </ClInclude>
+    <ClInclude Include="pSystem.h">
+      <Filter>ParticleSystem</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
