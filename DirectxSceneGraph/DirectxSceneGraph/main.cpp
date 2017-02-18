@@ -26,7 +26,12 @@ IDirect3DDevice9* Device = 0;
 
 const int Width  = 800;
 const int Height = 600;
-
+//
+// Mouse
+//
+bool IsMouseDown = false;
+POINT LastMousePoint = { 0,0 };
+POINT CurrentMousePoint = { 0,0 };
 //
 // sky box
 //
@@ -59,6 +64,35 @@ Camera   TheCamera(Camera::LANDOBJECT);
 // Framework Functions
 //
 
+void MouseDragFunc()
+{
+	POINT mousePos;
+	GetCursorPos(&mousePos);
+	ScreenToClient(NULL, &mousePos);
+
+	CurrentMousePoint.x = mousePos.x;
+	CurrentMousePoint.y = mousePos.y;
+
+	if (IsMouseDown)
+	{
+		int xDiff = CurrentMousePoint.x - LastMousePoint.x;
+		int yDiff = CurrentMousePoint.y - LastMousePoint.y;
+
+		if (xDiff != 0)
+		{
+			TheCamera.yaw(xDiff * -0.001);
+		}
+
+		if (yDiff != 0)
+		{
+			TheCamera.pitch(yDiff * 0.001);
+		}
+	}
+
+	LastMousePoint.x = CurrentMousePoint.x;
+	LastMousePoint.y = CurrentMousePoint.y;
+}
+
 bool LoadTexture(std::string fileName,IDirect3DTexture9 **tex)
 {
 	HRESULT hr = 0;
@@ -90,7 +124,7 @@ bool Setup()
 	// sky box
 	//
 	SkyBox = new CSkyBox(Device);
-	if (!SkyBox->InitSkyBox(60))
+	if (!SkyBox->InitSkyBox(200))
 	{
 		::MessageBox(NULL, _T("Initialize SkyBox failed!"), 0, 0);
 	}
@@ -191,6 +225,17 @@ bool Display(float timeDelta)
 		
 		if( ::GetAsyncKeyState(VK_RIGHT) & 0x8000f )
 			TheCamera.yaw(1.0f * timeDelta);
+
+		if (::GetAsyncKeyState(VK_LBUTTON))
+		{
+			IsMouseDown = true;
+		}
+		else
+		{
+			IsMouseDown = false;
+		}
+
+		MouseDragFunc();
 
 		D3DXVECTOR3 pos;
 		TheCamera.getPosition(&pos);
