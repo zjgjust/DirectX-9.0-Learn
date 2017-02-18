@@ -30,6 +30,7 @@ Camera::Camera(CameraType cameraType)
 	_right = D3DXVECTOR3(1.0f, 0.0f, 0.0f);
 	_up    = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 	_look  = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
+
 }
 
 Camera::~Camera()
@@ -57,9 +58,27 @@ void Camera::getUp(D3DXVECTOR3* up)
 	*up = _up;
 }
 
+void Camera::setUp(D3DXVECTOR3 up)
+{
+	_up = up;
+}
+
 void Camera::getLook(D3DXVECTOR3* look)
 {
 	*look = _look;
+}
+
+void Camera::setLook(D3DXVECTOR3 look)
+{
+	_look = look;
+}
+
+void Camera::setBoundary(float x_min, float x_max, float z_min, float z_max)
+{
+	_minX = x_min;
+	_maxX = x_max;
+	_minZ = z_min;
+	_maxZ = z_max;
 }
 
 void Camera::walk(float units)
@@ -163,11 +182,11 @@ void Camera::getViewMatrix(D3DXMATRIX* V)
 	// Keep camera's axes orthogonal to eachother
 	D3DXVec3Normalize(&_look, &_look);
 
-	D3DXVec3Cross(&_up, &_look, &_right);
-	D3DXVec3Normalize(&_up, &_up);
-
 	D3DXVec3Cross(&_right, &_up, &_look);
 	D3DXVec3Normalize(&_right, &_right);
+
+	D3DXVec3Cross(&_up, &_look, &_right);
+	D3DXVec3Normalize(&_up, &_up);
 
 	// Build the view matrix:
 	float x = -D3DXVec3Dot(&_right, &_pos);

@@ -15,6 +15,9 @@
 
 #include <cstdlib>
 #include <ctime>
+
+#define KEYDOWN(vk_code) ((GetAsyncKeyState(vk_code) & 0x8000) ? 1 : 0) 
+#define KEYUP(vk_code) ((GetAsyncKeyState(vk_code) & 0x8000) ? 0 : 1)
 //
 // Globals
 //
@@ -73,6 +76,7 @@ typedef struct Boundary
 	float maxZ;
 } Boundary;
 Boundary CameraBoundary;
+bool IsFollowing = false;
 
 //FPSCounter* FPS = 0;
 
@@ -161,7 +165,7 @@ bool Setup()
 	//
 
 	Box = new Cube(Device);
-	if (!LoadTexture("Data/crate.jpg", &BoxTexture))
+	if (!LoadTexture("Data/Box/crate.jpg", &BoxTexture))
 	{
 		::MessageBox(0, "Cube texture error.", 0, 0);
 		::PostQuitMessage(0);
@@ -229,46 +233,127 @@ bool Display(float timeDelta)
 
 	if( Device )
 	{
-		if( ::GetAsyncKeyState('W') & 0x8000f )
-			TheCamera.walk(100.0f * timeDelta);
 
-		if (::GetAsyncKeyState('S') & 0x8000f)
-			TheCamera.walk(-100.0f * timeDelta);
+		if(KEYDOWN('Q'))
+		{
+			if (!IsFollowing)
+			{
+				IsFollowing = true;
+				TheCamera.saveViewMatrix();
+			}
+		}
 
-		if (::GetAsyncKeyState('A') & 0x8000f)
-			TheCamera.strafe(-100.0f * timeDelta);
+		if (KEYDOWN('E'))
+		{
+			if (IsFollowing)
+			{
+				IsFollowing = false;
+				TheCamera.useLastViewMatrix();
+			}
+		}
 
-		if (::GetAsyncKeyState('D') & 0x8000f)
-			TheCamera.strafe(100.0f * timeDelta);
+		if (!IsFollowing)
+		{
+
+			if (::GetAsyncKeyState('W') & 0x8000f)
+				TheCamera.walk(100.0f * timeDelta);
+
+			if (::GetAsyncKeyState('S') & 0x8000f)
+				TheCamera.walk(-100.0f * timeDelta);
+
+			if (::GetAsyncKeyState('A') & 0x8000f)
+				TheCamera.strafe(-100.0f * timeDelta);
+
+			if (::GetAsyncKeyState('D') & 0x8000f)
+				TheCamera.strafe(100.0f * timeDelta);
+
+			if (::GetAsyncKeyState(VK_UP) & 0x8000f)
+				TheCamera.pitch(1.0f * timeDelta);
+
+			if (::GetAsyncKeyState(VK_DOWN) & 0x8000f)
+				TheCamera.pitch(-1.0f * timeDelta);
+
+			if (::GetAsyncKeyState(VK_LEFT) & 0x8000f)
+				TheCamera.yaw(-1.0f * timeDelta);
+
+			if (::GetAsyncKeyState(VK_RIGHT) & 0x8000f)
+				TheCamera.yaw(1.0f * timeDelta);
+
+			if (::GetAsyncKeyState(VK_LBUTTON))
+				IsMouseDown = true;
+			else
+				IsMouseDown = false;
+
+			MouseDragFunc();
+			D3DXVECTOR3 pos;
+			TheCamera.getPosition(&pos);
+			float height = TheTerrain->getHeight(pos.x, pos.z) * 0.2; // 降低高度
+			pos.y = height + 5.0f; // add height because we're standing up
+			TheCamera.setPosition(&pos);
+
+		}
+
+		//terrain matrix
+		D3DXMATRIX I;
+		D3DXMatrixIdentity(&I);
+
+		//snowman static
+		D3DXMATRIX snowMatrix;
+		D3DXMatrixTranslation(&snowMatrix, 0.0, 7.0, 0.0);
+
+		//box matrix
+		SelfRotateAngle += 0.001 * D3DX_PI;
 		
-		if( ::GetAsyncKeyState(VK_UP) & 0x8000f )
-			TheCamera.pitch(1.0f * timeDelta);
+		if (SelfRotateAngle >= 2 * D3DX_PI) SelfRotateAngle = 0.0;
 		
-		if( ::GetAsyncKeyState(VK_DOWN) & 0x8000f )
-			TheCamera.pitch(-1.0f * timeDelta);
+		D3DXMATRIX SelfRotateMatrix;
 		
-		if( ::GetAsyncKeyState(VK_LEFT) & 0x8000f )
-			TheCamera.yaw(-1.0f * timeDelta);
+		D3DXMatrixRotationY(&SelfRotateMatrix, SelfRotateAngle);
 		
-		if( ::GetAsyncKeyState(VK_RIGHT) & 0x8000f )
-			TheCamera.yaw(1.0f * timeDelta);
+		GlobalRotateAngle += 0.001 * D3DX_PI;
+		
+		if (GlobalRotateAngle >= 2 * D3DX_PI) GlobalRotateAngle = 0.0;
 
-		if (::GetAsyncKeyState(VK_LBUTTON))
-			IsMouseDown = true;
-		else
-			IsMouseDown = false;
+		D3DXMATRIX GlobalRotateMatrix;
+		
+		D3DXMatrixRotationY(&GlobalRotateMatrix, GlobalRotateAngle);
+		
+		D3DXMATRIX ScallMatrix;
+		
+		D3DXMatrixScaling(&ScallMatrix, 5, 5, 5);
+		
+		D3DXMATRIX TransMatrix;
+		
+		D3DXMatrixTranslation(&TransMatrix, 0.0, 20.0, 50.0);
+		
+		D3DXMATRIX BoxMatrix = SelfRotateMatrix * ScallMatrix * TransMatrix * GlobalRotateMatrix;
 
-		MouseDragFunc();
-
-		D3DXVECTOR3 pos;
-		TheCamera.getPosition(&pos);
-		float height = TheTerrain->getHeight( pos.x, pos.z ) * 0.2; // 降低高度
-		pos.y = height + 5.0f; // add height because we're standing up
-		TheCamera.setPosition(&pos);
+		if (IsFollowing)
+		{
+			D3DXVECTOR3 position(0.0, 0.0, 0.0);
+			D3DXMATRIX tempMatrix = TransMatrix * GlobalRotateMatrix;
+			D3DXVec3TransformCoord(&position, &position,&tempMatrix);
+			D3DXVECTOR3 look = D3DXVECTOR3(0, 0, 0) - position;
+			D3DXVECTOR3 up(0.0, 1.0, 0.0);
+			TheCamera.setPosition(&position);
+			TheCamera.setLook(look);
+			TheCamera.setUp(up);
+		}
 
 		D3DXMATRIX V;
 		TheCamera.getViewMatrix(&V);
 		Device->SetTransform(D3DTS_VIEW, &V);
+
+		//sky box matrix
+		D3DXVECTOR3 cameraPosition;
+		TheCamera.getPosition(&cameraPosition);
+		D3DXMATRIX skyBoxTrasMatrix;
+		D3DXMatrixTranslation(&skyBoxTrasMatrix, cameraPosition.x, cameraPosition.y, cameraPosition.z);
+
+		//Snow Man
+		D3DXMATRIX DynamicSnowManTransMatrix;
+		D3DXMatrixTranslation(&DynamicSnowManTransMatrix, 0.0, 25.0, 50.0);
+		DynamicSnowManTransMatrix = SelfRotateMatrix * DynamicSnowManTransMatrix * GlobalRotateMatrix;
 
 		//更新雪花数据
 		Sno->update(timeDelta);
@@ -279,71 +364,30 @@ bool Display(float timeDelta)
 		Device->Clear(0, 0, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0xff000000, 1.0f, 0);
 		Device->BeginScene();
 
-		//
-		// Draw the skybox
-		//
-		D3DXVECTOR3 cameraPosition;
-		TheCamera.getPosition(&cameraPosition);
-		D3DXMATRIX skyBoxTrasMatrix;
-		D3DXMatrixTranslation(&skyBoxTrasMatrix, cameraPosition.x, cameraPosition.y, cameraPosition.z);
 		if (SkyBox != nullptr)
 		{
 			Device->SetTransform(D3DTS_WORLD, &skyBoxTrasMatrix);
 			SkyBox->Render();
 		}
 
-		//
-		// Draw the terrain
-		//
-		D3DXMATRIX I;
-		D3DXMatrixIdentity(&I);
-
 		if (TheTerrain != nullptr)
 			TheTerrain->draw(&I, false);
 
-		//
-		// Draw Snow Man
-		//
-		D3DXMATRIX snowMatrix;
-		D3DXMatrixTranslation(&snowMatrix, 0.0, 7.0, 0.0);
 		if (SnowManStatic != nullptr)
 			SnowManStatic->Draw(snowMatrix);
 
-		//
-		//Draw Box
-		//
-		SelfRotateAngle += 0.001 * D3DX_PI;
-		if (SelfRotateAngle >= 2 * D3DX_PI)
-			SelfRotateAngle = 0.0;
-		D3DXMATRIX SelfRotateMatrix;
-		D3DXMatrixRotationY(&SelfRotateMatrix, SelfRotateAngle);
-		GlobalRotateAngle += 0.001 * D3DX_PI;
-		if (GlobalRotateAngle >= 2 * D3DX_PI)
-			GlobalRotateAngle = 0.0;
-		D3DXMATRIX GlobalRotateMatrix;
-		D3DXMatrixRotationY(&GlobalRotateMatrix, GlobalRotateAngle);
-
-		D3DXMATRIX ScallMatrix;
-		D3DXMatrixScaling(&ScallMatrix, 5, 5, 5);
-		D3DXMATRIX TransMatrix;
-		D3DXMatrixTranslation(&TransMatrix, 0.0, 20.0, 50.0);
-		D3DXMATRIX InputMatrix = SelfRotateMatrix * ScallMatrix * TransMatrix * GlobalRotateMatrix;
-
 		if (Box != nullptr)
-			Box->draw(&InputMatrix, &d3d::WHITE_MTRL, BoxTexture);
+			Box->draw(&BoxMatrix, &d3d::WHITE_MTRL, BoxTexture);
 		
-		//Snow Man
-		D3DXMATRIX STransMatrix;
-		D3DXMatrixTranslation(&STransMatrix, 0.0, 25.0, 50.0);
-		InputMatrix = SelfRotateMatrix * STransMatrix * GlobalRotateMatrix;
 		if (SnowManDynamic != nullptr)
-			SnowManDynamic->Draw(InputMatrix);
+			SnowManDynamic->Draw(DynamicSnowManTransMatrix);
 		
 		
 		// order important, render snow last.
 		Device->SetTransform(D3DTS_WORLD, &I);
 		Sno->render();
 		
+
 		//if( FPS )
 		//	FPS->render(0xffffffff, timeDelta);
 
