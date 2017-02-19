@@ -1,10 +1,3 @@
-//-----------------------------------------------------------------------------
-// File: DXUtil.h
-//
-// Desc: Helper functions and typing shortcuts for DirectX programming.
-//
-// Copyright (c) 1997-2001 Microsoft Corporation. All rights reserved
-//-----------------------------------------------------------------------------
 #ifndef DXUTIL_H
 #define DXUTIL_H
 

@@ -1,10 +1,3 @@
-//-----------------------------------------------------------------------------
-// File: DXUtil.cpp
-//
-// Desc: Shortcut macros and functions for using DX objects
-//
-// Copyright (c) Microsoft Corporation. All rights reserved
-//-----------------------------------------------------------------------------
 #ifndef STRICT
 #define STRICT
 #endif // !STRICT

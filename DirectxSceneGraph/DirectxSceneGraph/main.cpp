@@ -24,8 +24,8 @@
 
 IDirect3DDevice9* Device = 0; 
 
-const int Width  = 1920;
-const int Height = 1080;
+const int Width  = 1024;
+const int Height = 768;
 
 //
 // Mouse
@@ -302,7 +302,7 @@ bool Display(float timeDelta)
 		D3DXMatrixTranslation(&snowMatrix, 0.0, 7.0, 0.0);
 
 		//box matrix
-		SelfRotateAngle += 0.001 * D3DX_PI;
+		SelfRotateAngle += /*0.001*/timeDelta * D3DX_PI / 2;
 		
 		if (SelfRotateAngle >= 2 * D3DX_PI) SelfRotateAngle = 0.0;
 		
@@ -310,7 +310,7 @@ bool Display(float timeDelta)
 		
 		D3DXMatrixRotationY(&SelfRotateMatrix, SelfRotateAngle);
 		
-		GlobalRotateAngle += 0.001 * D3DX_PI;
+		GlobalRotateAngle += /*0.001*/timeDelta * D3DX_PI / 2;
 		
 		if (GlobalRotateAngle >= 2 * D3DX_PI) GlobalRotateAngle = 0.0;
 

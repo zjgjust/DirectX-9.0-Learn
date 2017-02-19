@@ -1,10 +1,4 @@
-//-----------------------------------------------------------------------------
-// File: D3DUtil.cpp
-//
-// Desc: Shortcut macros and functions for using DX objects
-//
-// Copyright (c) 1997-2001 Microsoft Corporation. All rights reserved
-//-----------------------------------------------------------------------------
+
 #define STRICT
 #include <Windows.h>
 #include <WindowsX.h>

@@ -1,10 +1,4 @@
-//-----------------------------------------------------------------------------
-// File: D3DFont.cpp
-//
-// Desc: Texture-based font class
-//
-// Copyright (c) 1999-2001 Microsoft Corporation. All rights reserved.
-//-----------------------------------------------------------------------------
+
 #define STRICT
 #include <stdio.h>
 #include <tchar.h>

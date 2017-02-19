@@ -1,10 +1,4 @@
-//-----------------------------------------------------------------------------
-// File: D3DFont.h
-//
-// Desc: Texture-based font class
-//
-// Copyright (c) 1999-2001 Microsoft Corporation. All rights reserved.
-//-----------------------------------------------------------------------------
+
 #ifndef D3DFONT_H
 #define D3DFONT_H
 #include <tchar.h>
